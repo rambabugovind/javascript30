@@ -59,6 +59,28 @@
 
 <script>
 
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    if (!audio) return;
+    audio.currentTime = 0;
+    audio.play();
+    key.classList.add('playing');
+  }
+
+  function removeTransition(e) {
+    // there are several transitionend events that occur
+    // we just pick transitionend of 'transform' transition
+    if (e.propertyName !== 'transform') return;
+    // here "this" represents key object
+    this.classList.remove('playing');
+  }
+
+  window.addEventListener('keydown', playSound);
+  // keys is a node list representing all elements with class "key"
+  const keys = document.querySelectorAll('.key');
+  // we have to add eventListener to individual "key" and not to "keys"
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
 </script>
 
 
